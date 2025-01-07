@@ -28,5 +28,17 @@ jobs:
       - name: Build Docker image
         run: docker build -t webapp/fastapi-test .
 
+      - name: Run Docker container
+        run: |
+          docker run -d --name fastapi-container -p 8080:8080 webapp/fastapi-app
+          sleep 10
+
       - name: Run tests
-        run: docker run --rm -e CI=true webapp/fastapi-test pytest
+        run: |
+          docker exec webapp-container pytest 
+
+      - name: Clean up
+        if: always()  # Ensure this step runs even if tests fail
+        run: |
+          docker stop fastapi-container
+          docker rm fastapi-container
