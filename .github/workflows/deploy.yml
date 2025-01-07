@@ -25,6 +25,9 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+      - name: Make wait-for.sh executable
+        run: chmod +x wait-for.sh
+
       - name: Build Docker image
         run: docker build -t webapp/fastapi-app .
 
