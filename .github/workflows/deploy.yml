@@ -26,4 +26,4 @@ jobs:
         run: docker build -t webapp/fastapi-app .
 
       - name: Run tests
-        run: docker run --rm -e CI=true webapp/fastapi-app pytest --durations=10
+        run: docker run --rm -e CI=true webapp/fastapi-app pytest
