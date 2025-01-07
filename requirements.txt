@@ -3,4 +3,3 @@ uvicorn==0.34.0
 pytest==8.3.4
 httpx==0.28.1
 pylint==3.3.3
-pytest-xdist==3.6.1
