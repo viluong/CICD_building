@@ -15,6 +15,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'  # Skip for pull requests
         uses: docker/login-action@v2
@@ -25,5 +28,20 @@ jobs:
       - name: Build Docker image
         run: docker build -t webapp/fastapi-app .
 
+      - name: Start Webapp container
+        run: |
+          docker run -d --name webapp-container -p 8080:8080 webapp/fastapi-app
+
+      - name: Wait for webapp to be ready
+        run: |
+          ./wait-for.sh localhost 8080
+
       - name: Run tests
-        run: docker run --rm -e CI=true webapp/fastapi-app pytest
+        run: |
+          docker exec webapp-container pytest
+
+      - name: Clean up container
+        if: always()  # Ensure this step runs even if tests fail
+        run: |
+          docker stop webapp-container
+          docker rm webapp-container
