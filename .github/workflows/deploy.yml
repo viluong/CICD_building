@@ -41,7 +41,7 @@ jobs:
 
       - name: Run tests
         run: |
-          docker exec webapp-container pytest
+          docker exec webapp-container pytest 
 
       - name: Clean up container
         if: always()  # Ensure this step runs even if tests fail
