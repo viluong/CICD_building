@@ -26,11 +26,11 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t webapp/fastapi-test .
+        run: docker build -t webapp/fastapi-app .
 
       - name: Run Docker container
         run: |
-          docker run -d --name fastapi-container -p 8080:8080 webapp/fastapi-app
+          docker run -d --name webapp-container -p 8080:8080 webapp/fastapi-app
           sleep 10
 
       - name: Run tests
