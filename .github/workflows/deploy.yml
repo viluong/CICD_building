@@ -29,10 +29,4 @@ jobs:
         run: docker build -t webapp/fastapi-test .
 
       - name: Run tests
-        run: docker run -e CI=true webapp/fastapi-test pytest
-
-      - name: Clean up
-        if: always()  # Ensure this step runs even if tests fail
-        run: |
-          docker stop fastapi-container
-          docker rm fastapi-container
+        run: docker run --rm -e CI=true webapp/fastapi-test pytest
