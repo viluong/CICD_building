@@ -25,12 +25,16 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Build Docker image
-        uses: docker/build-push-action@v4
+        run: docker build -t webapp/fastapi-app .
+
+      - name: Save Docker image as artifact
+        run: docker save -o image.tar webapp/fastapi-app
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v3
         with:
-          context: .
-          tags: webapp/fastapi-app:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          name: docker-image
+          path: image.tar
 
   test:
     runs-on: ubuntu-latest
@@ -38,6 +42,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-image
+          path: .
+
+      - name: Load Docker image
+        run: docker load -i image.tar
 
       - name: Run Test
         run: |
