@@ -25,26 +25,21 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Make wait-for.sh executable
-        run: chmod +x wait-for.sh
-
       - name: Build Docker image
         run: docker build -t webapp/fastapi-app .
 
-      - name: Start Webapp container
-        run: |
-          docker run -d --name webapp-container -p 8080:8080 webapp/fastapi-app
+      - name: Run Test
+        run: docker run -e CI=true webapp/fastapi-app pytest
 
-      - name: Wait for webapp to be ready
-        run: |
-          ./wait-for.sh localhost 8080
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
 
-      - name: Run tests
-        run: |
-          docker exec webapp-container pytest 
-
-      - name: Clean up container
-        if: always()  # Ensure this step runs even if tests fail
-        run: |
-          docker stop webapp-container
-          docker rm webapp-container
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          application_name: webapp
+          environment_name: Webapp-env
+          existing_bucket_name: elasticbeanstalk-ap-southeast-1-509399619983
+          region: ap-southeast-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
