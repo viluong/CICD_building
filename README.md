@@ -1,6 +1,8 @@
 # CICD_building
-- Practice the deployment of a web application in a production-style environment.
+- Practice the deployment of a web application in a production-style.
 - Using github action to build CICD
+- Using AWS service
+- Create FastAPI application
 
 **I. Set up AWS service:**
 
