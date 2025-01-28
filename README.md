@@ -1,6 +1,6 @@
 # CICD_building
 - Practice the deployment of a web application in a production-style.
-- Using github action to build CICD
+- Using github action to build CICD in [this file](https://github.com/viluong/CICD_building/blob/master/.github/workflows/deploy.yml).
 - Using AWS service
 - Create FastAPI application
 
